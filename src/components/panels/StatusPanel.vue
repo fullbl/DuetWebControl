@@ -227,7 +227,7 @@ a:not(:hover) {
 
 import { mapState, mapGetters } from 'vuex'
 
-import { ProbeType, isPrinting } from '../../store/machine/modelEnums.js'
+import { ProbeType, isPrinting } from '@/store/machine/modelEnums'
 
 export default {
 	computed: {
@@ -256,11 +256,7 @@ export default {
 			return this.sensors.probes.filter(probe => probe !== null && probe.type !== ProbeType.none);
 		},
 		sensorsPresent() {
-			return ((this.boards.length && this.boards[0].vIn.current > 0) ||
-					(this.boards.length && this.boards[0].v12.current > 0) ||
-					(this.boards.length && this.boards[0].mcuTemp.current > -273) ||
-					(this.fanRPM.length !== 0) ||
-					(this.probesPresent));
+      return false;
 		},
 		visibleAxes() {
 			return this.move.axes.filter(axis => axis.visible);
