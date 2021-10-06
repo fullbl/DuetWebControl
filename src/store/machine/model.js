@@ -14,7 +14,6 @@ import {
 import {
 	Axis,
 	Board,
-	Extruder,
 	Fan,
 	Heater,
 	InputChannel,
@@ -26,7 +25,7 @@ import {
 } from './modelItems.js'
 
 import Path from '../../utils/path.js'
-import { patch, quickPatch } from '../../utils/patch.js'
+import { patch, quickPatch } from '@/utils/patch'
 
 // Internal object model as provided by RepRapFirmware and DSF
 // This must be kept in sync for things to work properly...
@@ -262,8 +261,6 @@ export const DefaultMachineModel = new MachineModel({
 			})
 		],
 		extruders: [
-			new Extruder(),
-			new Extruder()
 		]
 	},
 	network: {
