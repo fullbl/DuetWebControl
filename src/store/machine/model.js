@@ -259,13 +259,6 @@ export const DefaultMachineModel = new MachineModel({
 				homed: true,
 				machinePosition: 0,
 				userPosition: 0
-			}),
-			new Axis({
-				letter: 'Z',
-				drives: [2],
-				homed: true,
-				machinePosition: 0,
-				userPosition: 0
 			})
 		],
 		extruders: [
