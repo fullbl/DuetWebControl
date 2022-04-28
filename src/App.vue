@@ -114,7 +114,6 @@ textarea {
 						</v-col>
 
 						<v-col v-if="$vuetify.breakpoint.mdAndUp" :class="{ 'd-flex': hasTemperaturesToDisplay }" md="3" lg="3" xl="4">
-							<temperature-chart></temperature-chart>
 						</v-col>
 					</v-row>
 				</v-container>
