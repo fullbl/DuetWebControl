@@ -76,7 +76,7 @@ export default class PollConnector extends BaseConnector {
 			xhr.responseType = responseType;
 		}
 		if (onProgress) {
-			xhr.onprogress = function(e) {
+			xhr.onprogress = function (e) {
 				if (e.loaded && e.total) {
 					onProgress(e.loaded, e.total, retry);
 				}
@@ -91,7 +91,7 @@ export default class PollConnector extends BaseConnector {
 
 		const maxRetries = this.settings.ajaxRetries, that = this;
 		return new Promise((resolve, reject) => {
-			xhr.onload = function() {
+			xhr.onload = function () {
 				that.requests = that.requests.filter(request => request !== xhr);
 				if (xhr.status >= 200 && xhr.status < 300) {
 					if (responseType === 'json') {
@@ -113,10 +113,10 @@ export default class PollConnector extends BaseConnector {
 					// the current session to be terminated. Try to send another rr_connect request
 					// with the last-known password and retry the pending request if that succeeds
 					BaseConnector.request('GET', `${that.requestBase}rr_connect`, {
-							password: that.password,
-							time: timeToStr(new Date())
-						})
-						.then(function(result) {
+						password: that.password,
+						time: timeToStr(new Date())
+					})
+						.then(function (result) {
 							if (result instanceof Object && result.err === 0) {
 								that.request(method, url, params, responseType, body, onProgress, timeout, cancellationToken, filename)
 									.then(result => resolve(result))
@@ -134,7 +134,7 @@ export default class PollConnector extends BaseConnector {
 						if (retry === 0) {
 							that.lastSeqs.reply++;	// increase the seq number to resolve potentially blocking codes
 							that.getGCodeReply()
-								.then(function() {
+								.then(function () {
 									// Retry the original request when the code reply has been received
 									that.request(method, url, params, responseType, body, onProgress, timeout, cancellationToken, filename, retry + 1)
 										.then(result => resolve(result))
@@ -143,7 +143,7 @@ export default class PollConnector extends BaseConnector {
 								.catch(error => reject(error));
 						} else {
 							// Retry the original request after a while
-							setTimeout(function() {
+							setTimeout(function () {
 								that.request(method, url, params, responseType, body, onProgress, timeout, cancellationToken, filename, retry + 1)
 									.then(result => resolve(result))
 									.catch(error => reject(error));
@@ -158,11 +158,11 @@ export default class PollConnector extends BaseConnector {
 					reject(new OperationFailedError());
 				}
 			};
-			xhr.onabort = function() {
+			xhr.onabort = function () {
 				that.requests = that.requests.filter(request => request !== xhr);
 				reject(that.updateLoopTimer ? new OperationCancelledError() : new DisconnectedError());
 			}
-			xhr.onerror = function() {
+			xhr.onerror = function () {
 				that.requests = that.requests.filter(request => request !== xhr);
 				if (retry < maxRetries) {
 					// Unreliable connection, retry if possible
@@ -331,6 +331,13 @@ export default class PollConnector extends BaseConnector {
 						}
 					} while (next !== 0);
 
+					if (
+						null !== keyResult &&
+						Object.hasOwnProperty.call(keyResult, 'axes') &&
+						keyResult.axes.length > 2
+					) {
+						keyResult.axes[2].visible = false;
+					}
 					await this.dispatch('update', { [key]: keyResult });
 					BaseConnector.setConnectingProgress((keyIndex++ / keysToQuery.length) * 100);
 
@@ -460,7 +467,7 @@ export default class PollConnector extends BaseConnector {
 	zAxisIndex = -1
 	updateZAxisIndex(axes) {
 		this.zAxisIndex = -1;
-		axes.forEach(function(axis, index) {
+		axes.forEach(function (axis, index) {
 			if (axis !== null && axis.letter === 'Z') {
 				this.zAxisIndex = index;
 			}
@@ -503,71 +510,71 @@ export default class PollConnector extends BaseConnector {
 		}
 
 		if (jobKey.layer > 0 && jobKey.layer !== this.lastLayer) {
-            // Compute layer usage stats first
-            const numChangedLayers = (jobKey.layer > this.lastLayer) ? Math.abs(jobKey.layer - this.lastLayer) : 1;
-            const printDuration = jobKey.duration - (jobKey.warmUpDuration !== null ? jobKey.warmUpDuration : 0);
-            const avgLayerDuration = (printDuration - this.lastDuration) / numChangedLayers;
-            const totalFilamentUsage = [], avgFilamentUsage = [];
-            const bytesPrinted = (jobKey.filePosition !== null) ? (jobKey.filePosition - this.lastFilePosition) : 0;
-            const avgFractionPrinted = (this.printFileSize > 0) ? bytesPrinted / (this.printFileSize * numChangedLayers) : 0;
-            for (let i = 0; i < extruders.length; i++) {
-                if (extruders[i] != null) {
-                    const lastFilamentUsage = (i < this.lastFilamentUsage.length) ? this.lastFilamentUsage[i] : 0;
-                    totalFilamentUsage.push(extruders[i].rawPosition);
-                    avgFilamentUsage.push((extruders[i].rawPosition - lastFilamentUsage) / numChangedLayers);
-                }
-            }
+			// Compute layer usage stats first
+			const numChangedLayers = (jobKey.layer > this.lastLayer) ? Math.abs(jobKey.layer - this.lastLayer) : 1;
+			const printDuration = jobKey.duration - (jobKey.warmUpDuration !== null ? jobKey.warmUpDuration : 0);
+			const avgLayerDuration = (printDuration - this.lastDuration) / numChangedLayers;
+			const totalFilamentUsage = [], avgFilamentUsage = [];
+			const bytesPrinted = (jobKey.filePosition !== null) ? (jobKey.filePosition - this.lastFilePosition) : 0;
+			const avgFractionPrinted = (this.printFileSize > 0) ? bytesPrinted / (this.printFileSize * numChangedLayers) : 0;
+			for (let i = 0; i < extruders.length; i++) {
+				if (extruders[i] != null) {
+					const lastFilamentUsage = (i < this.lastFilamentUsage.length) ? this.lastFilamentUsage[i] : 0;
+					totalFilamentUsage.push(extruders[i].rawPosition);
+					avgFilamentUsage.push((extruders[i].rawPosition - lastFilamentUsage) / numChangedLayers);
+				}
+			}
 
-            // Get layer height
-            let currentHeight = 0.0;
-            if (this.zAxisIndex !== -1 && this.zAxisIndex < axes.length && axes[this.zAxisIndex] !== null) {
-                currentHeight = axes[this.zAxisIndex].userPosition;
-            }
-            const avgLayerHeight = Math.abs(currentHeight - this.lastHeight) / Math.abs(jobKey.layer - this.lastLayer);
+			// Get layer height
+			let currentHeight = 0.0;
+			if (this.zAxisIndex !== -1 && this.zAxisIndex < axes.length && axes[this.zAxisIndex] !== null) {
+				currentHeight = axes[this.zAxisIndex].userPosition;
+			}
+			const avgLayerHeight = Math.abs(currentHeight - this.lastHeight) / Math.abs(jobKey.layer - this.lastLayer);
 
-            if (jobKey.layer > this.lastLayer) {
-                // Add new layers
-                for (let i = this.layers.length; i < jobKey.layer - 1; i++) {
-                    const newLayer = new Layer();
-                    newLayer.duration = avgLayerDuration;
-                    avgFilamentUsage.forEach(function (filamentUsage) {
-                        newLayer.filament.push(filamentUsage);
-                    });
-                    newLayer.fractionPrinted = avgFractionPrinted;
-                    newLayer.height = avgLayerHeight;
-                    analogSensors.forEach(function (sensor) {
-                        if (sensor != null) {
-                            newLayer.temperatures.push(sensor.lastReading);
-                        }
-                    });
-                    this.layers.push(newLayer);
-                }
-            } else if (jobKey.layer < this.lastLayer) {
-                // Layer count went down (probably printing sequentially), update the last layer
-                let lastLayer;
-                if (this.layers.length < this.lastLayer) {
-                    lastLayer = new Layer();
-                    lastLayer.height = avgLayerHeight;
-                    analogSensors.forEach(function (sensor) {
-                        if (sensor != null) {
-                            lastLayer.temperatures.push(sensor.lastReading);
-                        }
-                    });
-                    this.layers.push(lastLayer);
-                } else {
-                    lastLayer = this.layers[this.lastLayer - 1];
-                }
+			if (jobKey.layer > this.lastLayer) {
+				// Add new layers
+				for (let i = this.layers.length; i < jobKey.layer - 1; i++) {
+					const newLayer = new Layer();
+					newLayer.duration = avgLayerDuration;
+					avgFilamentUsage.forEach(function (filamentUsage) {
+						newLayer.filament.push(filamentUsage);
+					});
+					newLayer.fractionPrinted = avgFractionPrinted;
+					newLayer.height = avgLayerHeight;
+					analogSensors.forEach(function (sensor) {
+						if (sensor != null) {
+							newLayer.temperatures.push(sensor.lastReading);
+						}
+					});
+					this.layers.push(newLayer);
+				}
+			} else if (jobKey.layer < this.lastLayer) {
+				// Layer count went down (probably printing sequentially), update the last layer
+				let lastLayer;
+				if (this.layers.length < this.lastLayer) {
+					lastLayer = new Layer();
+					lastLayer.height = avgLayerHeight;
+					analogSensors.forEach(function (sensor) {
+						if (sensor != null) {
+							lastLayer.temperatures.push(sensor.lastReading);
+						}
+					});
+					this.layers.push(lastLayer);
+				} else {
+					lastLayer = this.layers[this.lastLayer - 1];
+				}
 
-                lastLayer.duration += avgLayerDuration;
-                for (let i = 0; i < avgFilamentUsage.length; i++) {
-                    if (i >= lastLayer.filament.length) {
-                        lastLayer.filament.push(avgFilamentUsage[i]);
-                    } else {
-                        lastLayer.filament[i] += avgFilamentUsage[i];
-                    }
-                }
-                lastLayer.fractionPrinted += avgFractionPrinted;
-            }
+				lastLayer.duration += avgLayerDuration;
+				for (let i = 0; i < avgFilamentUsage.length; i++) {
+					if (i >= lastLayer.filament.length) {
+						lastLayer.filament.push(avgFilamentUsage[i]);
+					} else {
+						lastLayer.filament[i] += avgFilamentUsage[i];
+					}
+				}
+				lastLayer.fractionPrinted += avgFractionPrinted;
+			}
 
 			// Record values for the next layer change
 			this.lastDuration = printDuration;
@@ -649,7 +656,7 @@ export default class PollConnector extends BaseConnector {
 		if (this.pendingCodes.length > 0) {
 			// Resolve pending code promises
 			const seq = this.lastSeqs.reply;
-			this.pendingCodes.forEach(function(code) {
+			this.pendingCodes.forEach(function (code) {
 				if (seq === null || code.seq < seq) {
 					code.resolve(reply);
 				}
@@ -663,7 +670,7 @@ export default class PollConnector extends BaseConnector {
 
 	async upload({ filename, content, cancellationToken = null, onProgress }) {
 		// Create upload options
-		const payload = (content instanceof(Blob)) ? content : new Blob([content]);
+		const payload = (content instanceof (Blob)) ? content : new Blob([content]);
 		const params = {
 			name: filename,
 			time: timeToStr((!this.settings.ignoreFileTimestamps && content.lastModified) ? new Date(content.lastModified) : new Date())
@@ -671,9 +678,9 @@ export default class PollConnector extends BaseConnector {
 
 		// Check if the CRC32 checksum is required
 		if (this.settings.crcUploads) {
-			const checksum = await new Promise(function(resolve) {
+			const checksum = await new Promise(function (resolve) {
 				const fileReader = new FileReader();
-				fileReader.onload = function(e){
+				fileReader.onload = function (e) {
 					const result = crc32(e.target.result);
 					resolve(result);
 				}
@@ -759,7 +766,7 @@ export default class PollConnector extends BaseConnector {
 
 	async getFileInfo(payload) {
 		const filename = (payload instanceof Object) ? payload.filename : payload;
-		const readThumbnailContent  = (payload instanceof Object) ? !!payload.readThumbnailContent : false;
+		const readThumbnailContent = (payload instanceof Object) ? !!payload.readThumbnailContent : false;
 
 		const response = await this.request('GET', 'rr_fileinfo', filename ? { name: filename } : {}, 'json', null, null, this.sessionTimeout, null, filename);
 		if (response.err) {
