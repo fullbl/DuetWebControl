@@ -50,8 +50,9 @@ export default {
 				// Ask user for hostname before connecting
 				this.showConnectDialog();
 			} else {
+				this.showConnectDialog();
 				// Connect to the host this is running on
-				await this.connect();
+				//await this.connect();
 			}
 		}
 	}
