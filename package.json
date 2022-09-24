@@ -11,7 +11,7 @@
     "build": "vue-cli-service build",
     "build-dev": "vue-cli-service build",
     "build-plugin": "node scripts/build-plugin.js",
-    "report": "vue-cli-service build --mode=development",
+    "report": "vue-cli-service build --mode development",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
