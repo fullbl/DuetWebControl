@@ -23,7 +23,7 @@ import SettingsNotificationsPanel from './SettingsNotificationsPanel.vue'
 import SettingsWebcamPanel from './SettingsWebcamPanel.vue'
 import SpeedFactorPanel from './SpeedFactorPanel.vue'
 import StatusPanel from './StatusPanel.vue'
-import ToolsPanel from './ToolsPanel.vue'
+//import ToolsPanel from './ToolsPanel.vue'
 import WebcamPanel from './WebcamPanel.vue'
 import ZBabystepPanel from './ZBabystepPanel.vue'
 import FFFContainerPanel from './FFFContainerPanel.vue'
@@ -55,7 +55,7 @@ Vue.component('settings-notifications-panel', SettingsNotificationsPanel)
 Vue.component('settings-webcam-panel', SettingsWebcamPanel)
 Vue.component('status-panel', StatusPanel)
 Vue.component('speed-factor-panel', SpeedFactorPanel)
-Vue.component('tools-panel', ToolsPanel)
+//Vue.component('tools-panel', ToolsPanel)
 Vue.component('webcam-panel', WebcamPanel)
 Vue.component('z-babystep-panel', ZBabystepPanel)
 Vue.component('cnc-axes-position', CNCAxesPosition)

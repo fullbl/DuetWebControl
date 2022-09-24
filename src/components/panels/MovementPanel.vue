@@ -64,55 +64,6 @@
 			</v-menu>
 		</v-card-title>
 
-		<v-card-text v-show="visibleAxes.length !== 0">
-			<!-- Mobile home buttons -->
-			<v-row class="hidden-md-and-up py-2" no-gutters>
-				<v-col>
-					<code-btn color="primary" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" block tile>
-						{{ $t('button.home.captionAll') }}
-					</code-btn>
-				</v-col>
-				<template v-if="!isDelta">
-					<v-col v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex">
-						<code-btn :color="axis.homed ? 'primary' : 'warning'" :disabled="!canHome" :title="$t('button.home.title', [axis.letter])" :code="getHomeCode(axis)" block tile>
-							{{ $t('button.home.caption', [axis.letter]) }}
-						</code-btn>
-					</v-col>
-				</template>
-			</v-row>
-
-			<v-row v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex" dense>
-				<!-- Regular home buttons -->
-				<v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down">
-					<code-btn :color="axis.homed ? 'primary' : 'warning'" :disabled="!canHome" :title="$t('button.home.title', [axis.letter])" :code="getHomeCode(axis)" class="ml-0">
-						{{ $t('button.home.caption', [axis.letter]) }}
-					</code-btn>
-				</v-col>
-
-				<!-- Decreasing movements -->
-				<v-col>
-					<v-row no-gutters>
-						<v-col v-for="index in numMoveSteps" :key="index"  :class="getMoveCellClass(index - 1)">
-							<code-btn :code="getMoveCode(axis, index - 1, true)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, index - 1)" block tile class="move-btn">
-								<v-icon>mdi-chevron-left</v-icon> {{ axis.letter + showSign(-moveSteps(axis.letter)[index - 1]) }}
-							</code-btn>
-						</v-col>
-					</v-row>
-				</v-col>
-
-				<!-- Increasing movements -->
-				<v-col>
-					<v-row no-gutters>
-						<v-col v-for="index in numMoveSteps" :key="index" :class="getMoveCellClass(numMoveSteps - index)">
-							<code-btn :code="getMoveCode(axis, numMoveSteps - index, false)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, numMoveSteps - index)" block tile class="move-btn">
-								{{ axis.letter + showSign(moveSteps(axis.letter)[numMoveSteps - index]) }} <v-icon>mdi-chevron-right</v-icon>
-							</code-btn>
-						</v-col>
-					</v-row>
-				</v-col>
-			</v-row>
-		</v-card-text>
-
 		<mesh-edit-dialog :shown.sync="showMeshEditDialog"></mesh-edit-dialog>
 		<input-dialog :shown.sync="moveStepDialog.shown" :title="$t('dialog.changeMoveStep.title')" :prompt="$t('dialog.changeMoveStep.prompt')" :preset="moveStepDialog.preset" is-numeric-value @confirmed="moveStepDialogConfirmed"></input-dialog>
 
