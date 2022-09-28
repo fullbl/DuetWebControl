@@ -1,0 +1,107 @@
+<template>
+    <div>
+        <code-btn color="warning" block :disabled="uiFrozen || !isPrinting || isPausing" :code="isPaused ? 'M24' : 'M25'" tabindex="0">
+            <v-icon class="mr-1">{{ isPaused ? 'mdi-play' : 'mdi-pause' }}</v-icon> {{ pauseResumeText }}
+        </code-btn>
+
+        <code-btn v-if="isPaused" color="error" block code="M0">
+            <v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
+        </code-btn>
+
+        <code-btn v-if="!isPrinting && processAnotherCode" color="success" block :code="processAnotherCode">
+            <v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
+        </code-btn>
+    </div>
+</template>
+
+<script>
+'use strict'
+
+import { mapState, mapGetters } from 'vuex'
+
+import { MachineMode, StatusType, isPaused, isPrinting } from '@/store/machine/modelEnums'
+
+export default {
+    props: {
+        texts: {
+            type: Boolean,
+            default: true
+        }
+    },
+    computed: {
+		...mapState('machine/model', {
+			lastFileName: state => state.job.lastFileName,
+			lastFileSimulated: state => state.job.lastFileSimulated,
+			machineMode: state => state.state.machineMode,
+			status: state => state.state.status,
+		}),
+        ...mapGetters(['uiFrozen']),
+        isPausing() { return this.status === StatusType.pausing; },
+		isPaused() { return isPaused(this.status); },
+		isPrinting() { return isPrinting(this.status); },
+        pauseResumeText() {
+            if(!this.texts){
+                return '';
+            }
+			if (this.isSimulating) {
+				return this.$t(this.isPaused ? 'panel.jobControl.resumeSimulation' : 'panel.jobControl.pauseSimulation');
+			}
+			if (this.machineMode === MachineMode.fff) {
+				return this.$t(this.isPaused ? 'panel.jobControl.resumePrint' : 'panel.jobControl.pausePrint');
+			}
+			return this.$t(this.isPaused ? 'panel.jobControl.resumeJob' : 'panel.jobControl.pauseJob');
+		},
+        cancelText() {
+            if(!this.texts){
+                return '';
+            }
+			if (this.isSimulating) {
+				return this.$t('panel.jobControl.cancelSimulation');
+			}
+			if (this.machineMode === MachineMode.fff) {
+				return this.$t('panel.jobControl.cancelPrint');
+			}
+			return this.$t('panel.jobControl.cancelJob');
+		},
+        processAnotherCode() {
+			if (this.lastFileName) {
+				if (this.lastFileSimulated) {
+					return `M37 P"${this.lastFileName}"`;
+				}
+				return `M32 "${this.lastFileName}"`;
+			}
+			return '';
+		},
+		processAnotherText() {
+            if(!this.texts){
+                return '';
+            }
+			if (this.lastFileSimulated) {
+				return this.$t('panel.jobControl.repeatSimulation');
+			}
+			if (this.machineMode === MachineMode.fff) {
+				return this.$t('panel.jobControl.repeatPrint');
+			}
+			return this.$t('panel.jobControl.repeatJob');
+		}
+    },
+	data() {
+		return {
+			isSimulating: false
+		}
+	},
+	mounted() {
+		this.isSimulating = (this.status === StatusType.simulating);
+	},
+	watch: {
+		status(to) {
+			if (to === StatusType.simulating) {
+				this.isSimulating = true;
+			} else if (!this.isPrinting) {
+				this.isSimulating = false;
+			}
+		}
+	}
+
+}
+</script>

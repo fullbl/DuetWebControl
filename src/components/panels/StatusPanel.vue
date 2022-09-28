@@ -37,7 +37,7 @@ a:not(:hover) {
 
 			<v-spacer></v-spacer>
 
-			<span v-if="machineMode">{{ $t('panel.status.mode', [machineMode.toUpperCase()]) }}</span>
+			<job-btns :texts="false"></job-btns>
 		</v-card-title>
 
 		<v-card-text class="px-0 pt-0 pb-2 content text-xs-center" v-show="sensorsPresent || (visibleAxes.length + move.extruders.length)">
@@ -225,11 +225,13 @@ a:not(:hover) {
 <script>
 'use strict'
 
+import JobBtns from '../buttons/JobBtns.vue'
 import { mapState, mapGetters } from 'vuex'
 
-import { ProbeType, isPrinting } from '@/store/machine/modelEnums'
+import { ProbeType, isPaused, isPrinting } from '@/store/machine/modelEnums'
 
 export default {
+	components: { JobBtns },
 	computed: {
 		...mapState('settings', ['darkTheme']),
 		...mapState('machine/model', {
@@ -241,6 +243,8 @@ export default {
 			status: state => state.state.status
 		}),
 		...mapGetters(['isConnected']),
+		isPaused() { return isPaused(this.status); },
+		isPrinting() { return isPrinting(this.status); },
 		fanRPM() {
 			return this.fans
 				.filter(fan => fan && fan.rpm >= 0)

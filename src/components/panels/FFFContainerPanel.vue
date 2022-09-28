@@ -5,7 +5,6 @@
 		</v-col>
 
 		<v-col cols="12" sm="6" md="5" lg="5" xl="4">
-			<tools-panel></tools-panel>
 		</v-col>
 	</v-row>
 </template>
