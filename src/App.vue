@@ -213,7 +213,7 @@ export default {
 		return {
 			drawer: this.$vuetify.breakpoint.lgAndUp,
 			injectedComponentNames: [],
-			showConnectButton: process.env.NODE_ENV === 'development'
+			showConnectButton: true //process.env.NODE_ENV === 'development'
 		}
 	},
 	methods: {

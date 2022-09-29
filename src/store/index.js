@@ -32,7 +32,7 @@ const store = new Vuex.Store({
 		isConnecting: false,
 		connectingProgress: -1,
 		isDisconnecting: false,
-		connectDialogShown: process.env.NODE_ENV === 'development',
+		connectDialogShown: true, //process.env.NODE_ENV === 'development',
 		passwordRequired: false,
 		selectedMachine: defaultMachine,
 		loadedDwcPlugins: [],
