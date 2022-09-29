@@ -3,6 +3,13 @@
 		<v-col cols="12" sm="8" md="8" lg="9" xl="9">
 			<movement-panel class="mb-2"></movement-panel>
 
+			<v-card class="mb-2">
+				<v-card-title>Jobs</v-card-title>
+				<v-card-text>
+					<job-file-list></job-file-list>
+				</v-card-text>
+			</v-card>
+
 			<v-row v-if="isFFForUnset">
 				<v-col sm="12" :md="(atxPower !== null) ? 9 : 12" :lg="(atxPower !== null) ? 9 : 12" :xl="(atxPower !== null) ? 10 : 12">
 					<extrude-panel></extrude-panel>
