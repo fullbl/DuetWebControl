@@ -21,3 +21,5 @@ yarn-error.log*
 *.ntvs*
 *.sw*
 *.user
+
+dist.zip
