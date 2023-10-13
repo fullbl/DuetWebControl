@@ -14,24 +14,16 @@
 					<v-col cols="12">
 						<job-control-panel></job-control-panel>
 					</v-col>
-					<v-col cols="12">
-						<z-babystep-panel></z-babystep-panel>
-					</v-col>
 					<v-col class="hidden-sm-and-down">
 						<job-info-panel></job-info-panel>
 					</v-col>
 					<v-col cols="12" class="d-none d-sm-block d-md-none">
 						<speed-factor-panel></speed-factor-panel>
 					</v-col>
-					<v-col cols="12" class="d-none d-sm-block d-md-none">
-						<extrusion-factors-panel></extrusion-factors-panel>
-					</v-col>
 				</v-row>
 			</v-col>
 
 			<v-col order="0" order-md="2" cols="12" md="5" xl="7" class="d-none d-sm-flex flex-column">
-				<layer-chart class="chart-height-limit mb-5"></layer-chart>
-
 				<v-row class="flex-grow-0 flex-shrink-1 d-none d-md-flex">
 					<v-col cols="12">
 						<job-estimations-panel></job-estimations-panel>
@@ -42,9 +34,6 @@
 				</v-row>
 
 				<v-row class="flex-grow-0 flex-shrink-1 hidden-sm-and-up mt-3">
-					<v-col cols="6" md="6">
-						<fans-panel></fans-panel>
-					</v-col>
 					<v-col cols="6" md="6">
 						<speed-factor-panel></speed-factor-panel>
 					</v-col>
@@ -68,9 +57,6 @@
 					</v-col>
 					<v-col cols="12">
 						<fans-panel></fans-panel>
-					</v-col>
-					<v-col cols="12" class="hidden-sm-only">
-						<extrusion-factors-panel></extrusion-factors-panel>
 					</v-col>
 				</v-row>
 			</v-col>

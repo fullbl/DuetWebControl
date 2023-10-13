@@ -8,33 +8,6 @@
 			<v-row dense>
 				<v-col class="d-flex flex-column">
 					<strong>
-						{{ $t('panel.jobData.warmUpDuration') }}
-					</strong>
-					<span>
-						{{ $displayTime(job.warmUpDuration) }}
-					</span>
-				</v-col>
-
-				<v-col class="d-flex flex-column">
-					<strong>
-						{{ $t('panel.jobData.currentLayerTime') }}
-					</strong>
-					<span>
-						{{ $displayTime(job.layerTime) }}
-					</span>
-				</v-col>
-
-				<v-col class="d-flex flex-column">
-					<strong>
-						{{ $t('panel.jobData.lastLayerTime') }}
-					</strong>
-					<span>
-						{{ $displayTime(job.layers.length ? job.layers[job.layers.length - 1].duration : null) }}
-					</span>
-				</v-col>
-
-				<v-col class="d-flex flex-column">
-					<strong>
 						{{ $t('panel.jobData.jobDuration') }}
 					</strong>
 					<span>
