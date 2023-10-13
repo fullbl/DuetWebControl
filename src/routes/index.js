@@ -7,10 +7,6 @@ import Status from './Control/Status.vue'
 import Dashboard from './Control/Dashboard.vue'
 import Console from './Control/Console.vue'
 
-import Jobs from './Files/Jobs.vue'
-import Macros from './Files/Macros.vue'
-import System from './Files/System.vue'
-
 import JobStatus from './Job/Status.vue'
 import Webcam from './Job/Webcam.vue'
 
@@ -182,11 +178,6 @@ export function registerSettingTab(general, name, component, caption, translated
 Vue.use(Status)
 Vue.use(Dashboard)
 Vue.use(Console)
-
-// Files
-Vue.use(Jobs)
-Vue.use(Macros)
-Vue.use(System)
 
 // Job
 Vue.use(JobStatus)
