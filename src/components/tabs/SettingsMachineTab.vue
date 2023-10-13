@@ -13,10 +13,6 @@
 				</v-col>
 			</v-row>
 		</v-col>
-
-		<v-col cols="12" md="8">
-			<settings-list-items-panel></settings-list-items-panel>
-		</v-col>
 	</v-row>
 </template>
 
